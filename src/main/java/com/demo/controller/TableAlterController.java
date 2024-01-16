@@ -12,7 +12,7 @@ public class TableAlterController {
     @Autowired
     private TableAlterService tableAlterationService;
 
-    @PostMapping("/alter")
+    @PutMapping("/alter")
     public ResponseEntity<String> alterTable(@RequestBody AlterTableDto alterTableDto) {
         String response = tableAlterationService.alterTable(alterTableDto);
         return ResponseEntity.ok(response);

@@ -14,7 +14,7 @@ public class ShowDatabaseService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public List<Map<String, String>> getAllDatabases() {
+    public List<Map<String, String>>getAllDatabases() {
         String sql = "SHOW DATABASES;";
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Map<String, String> database = new HashMap<>();
