@@ -18,9 +18,8 @@ public class OpenTableController {
     @Autowired
     private OpenTableService tableDataService;
 
-    @GetMapping("/table-data/{tableName}")
-    public List<Map<String, Object>> getTableData(@PathVariable String tableName) {
-        return tableDataService.getTableData(tableName);
+    @GetMapping("/{dbName}/table-data/{tableName}")
+    public List<Map<String, Object>> getTableData(@PathVariable String dbName, @PathVariable String tableName) {
+        return tableDataService.getTableData(dbName, tableName);
     }
 }
-

@@ -12,10 +12,10 @@ public class AppConfig {
         return new RestTemplate();
     }
     
-    @Value("${db.name:defaultDbName}")
-    private String dbName;
+    // @Value("${db.name:defaultDbName}")
+    // private String dbName;
 
-    public String getDbName() {
-        return dbName;
-    }
+    // public String getDbName() {
+    //     return dbName;
+    // }
 }

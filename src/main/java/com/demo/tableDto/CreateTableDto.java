@@ -2,8 +2,7 @@ package com.demo.tableDto;
 
 import java.util.List;
 public class CreateTableDto {
-    private String schemaName; 
-        private String tableName;
+    private String tableName;
     private List<Column> columns;
     
     public String getTableName() {
@@ -22,12 +21,5 @@ public class CreateTableDto {
         this.columns = columns;
     }
     
-    public String getSchemaName() {
-        return schemaName;
-    }
-    
-    public void setSchemaName(String schemaName) {
-        this.schemaName = schemaName;
-    }
-
+   
 }

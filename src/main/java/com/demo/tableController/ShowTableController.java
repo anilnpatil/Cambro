@@ -19,7 +19,7 @@ public class ShowTableController {
     private ShowTableService tableService;
 
     @GetMapping("/database/{dbName}")
-    public List<Map<String, Object>> getAllTables(@PathVariable("dbName") String databaseName) {
+    public List<Map<String, String>> getAllTables(@PathVariable("dbName") String databaseName) {
         return tableService.getAllTables(databaseName);
     }
 }

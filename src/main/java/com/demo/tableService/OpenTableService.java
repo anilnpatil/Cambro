@@ -12,8 +12,11 @@ public class OpenTableService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public List<Map<String, Object>> getTableData(String tableName) {
-        String sql = "SELECT * FROM " + tableName + ";";
+    public List<Map<String, Object>> getTableData(String dbName, String tableName) {
+        // You should validate dbName and tableName to prevent SQL Injection
+        // For example, check against a list of allowed database and table names
+
+        String sql = "SELECT * FROM " + dbName + "." + tableName + ";";
         return jdbcTemplate.queryForList(sql);
     }
 }

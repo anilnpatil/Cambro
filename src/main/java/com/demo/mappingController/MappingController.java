@@ -18,10 +18,11 @@ public class MappingController {
     private MappingService dataService;
 
     @PostMapping("/insertData")
-    public ResponseEntity<String> insertData(@RequestParam String tableName,
+    public ResponseEntity<String> insertData(@RequestParam String dbName,
+                                             @RequestParam String tableName,
                                              @RequestBody Map<String, Object> data) {
         try {
-            dataService.insertData(tableName, data);
+            dataService.insertData(dbName, tableName, data);
             return ResponseEntity.ok("Data inserted successfully");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
