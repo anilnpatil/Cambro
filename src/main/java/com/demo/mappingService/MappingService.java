@@ -1,7 +1,10 @@
 package com.demo.mappingService;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -23,9 +26,35 @@ public class MappingService {
                 String.join(", ", Collections.nCopies(data.size(), "?")));
 
         // Bind values and execute query
-
         // Bind values and execute query
         jdbcTemplate.update(sql, data.values().toArray());
        
     }
+
+    public void saveScheduleID(String scheduleID) {
+        String tableName = "scheduledb.scheduleid";
+        String sql = String.format("INSERT INTO %s (scheduleID) VALUES (?)", tableName);
+
+        // Execute the query using JdbcTemplate
+        jdbcTemplate.update(sql, scheduleID);
+    }
+    
+    public List<String> getAllScheduleIDs() {
+        //String tableName = "scheduledb.scheduleid";
+        String sql = String.format("SELECT scheduleID FROM scheduledb.scheduleid");
+
+        // Execute the query and return the result as a List of Strings
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
+
+        List<String> scheduleIDs = new ArrayList<>();
+        for (Map<String, Object> row : rows) {
+            scheduleIDs.add((String) row.get("scheduleID"));
+        }
+
+        return scheduleIDs;
+    }
+
+    
+
+    
 }

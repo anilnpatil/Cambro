@@ -38,23 +38,28 @@ public class DynamicTableController {
 
     // Delete Database feature
     @DeleteMapping("/dropDatabase/{dbName}")
-    public ResponseEntity<String> dropDatabase(@PathVariable String dbName) {
+    public ResponseEntity<ApiResponse<String>> dropDatabase(@PathVariable String dbName) {
         try {
             String result = dynamicTableService.dropDatabase(dbName);
-            return ResponseEntity.ok(result);
+            ApiResponse<String> response = new ApiResponse<>(true, result, null);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error dropping database: " + e.getMessage());
+            ApiResponse<String> response = new ApiResponse<>(false, null, "Error dropping database: " + e.getMessage());
+            return ResponseEntity.status(500).body(response);
         }
     }
 
     //delete table feature
     @DeleteMapping("/dropTable/dbName={dbName}/tableName={tableName}")
-    public ResponseEntity<String> dropTable(@PathVariable String dbName, @PathVariable String tableName) {
+    public ResponseEntity<ApiResponse<String>> dropTable(@PathVariable String dbName, @PathVariable String tableName) {
         try {
             String result = dynamicTableService.dropTable(dbName, tableName);
-            return ResponseEntity.ok(result);
+            ApiResponse<String> response = new ApiResponse<>(true, result, null);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error dropping table: " + e.getMessage());
+            ApiResponse<String> response = new ApiResponse<>(false, null, "Error dropping table: " + e.getMessage());
+            return ResponseEntity.status(500).body(response);
+            // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error dropping table: " + e.getMessage());
         }
     }
     //Read the Database table columnnames../

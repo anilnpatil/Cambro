@@ -23,7 +23,7 @@ public class ShowTableService {
         // Transform the result
         return tables.stream()
                 .map(map -> map.values().stream().findFirst()
-                        .map(tableName -> Map.of(databaseName, tableName.toString()))
+                        .map(tableName -> Map.of("name", tableName.toString()))
                         .orElse(Map.of()))
                 .collect(Collectors.toList());
     }
