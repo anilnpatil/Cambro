@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.demo.mappingService.MappingService;
+import com.demo.tableController.ApiResponse;
+import com.demo.util.ApiResponse1;
 
 @RestController
 @RequestMapping("/mapping")
@@ -20,38 +22,77 @@ public class MappingController {
     @Autowired
     private MappingService dataService;
     @CrossOrigin("*")
+    // @PostMapping("/insertData")
+    // public ResponseEntity<String> insertData(@RequestParam String dbName,
+    //                                          @RequestParam String tableName,
+    //                                          @RequestBody List<Map<String, Object>> data) {
+
+    //     try {
+    //         // System.out.println(tableName);
+    //         // System.out.println(dbName);
+    //         // System.out.println(data);
+            
+    //        for(Map<String, Object> data2:  data){
+    //             dataService.insertData(dbName, tableName, data2); 
+    //         }
+         
+    //         return ResponseEntity.ok("Data inserted successfully");
+    //     } catch (IllegalArgumentException e) {
+    //         return ResponseEntity.badRequest().body(e.getMessage());
+    //     } catch (Exception e) {
+    //         // In production, you might want to log this error as well
+    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
+    //     }
+    // }
+      
     @PostMapping("/insertData")
-    public ResponseEntity<String> insertData(@RequestParam String dbName,
-                                             @RequestParam String tableName,
-                                             @RequestBody List<Map<String, Object>> data) {
-
+    public ResponseEntity<ApiResponse1> insertData(@RequestParam String dbName,
+                                                  @RequestParam String tableName,
+                                                  @RequestBody List<Map<String, Object>> data) {
         try {
-            System.out.println(tableName);
-            System.out.println(dbName);
-            System.out.println(data);
-            
-           for(Map<String, Object> data2:  data){
-                dataService.insertData(dbName, tableName, data2); 
+            for (Map<String, Object> data2 : data) {
+                dataService.insertData(dbName, tableName, data2);
             }
-
-            
-            return ResponseEntity.ok("Data inserted successfully");
+            return ResponseEntity.ok(ApiResponse1.success("Data inserted successfully", null));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(ApiResponse1.error(e.getMessage()));
         } catch (Exception e) {
-            // In production, you might want to log this error as well
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse1.error("Internal server error"));
         }
     }
-    @PostMapping("/saveSchedulId")
-    public ResponseEntity<String> saveScheduleID(@RequestParam String scheduleID) {
-        dataService.saveScheduleID(scheduleID);
-        return ResponseEntity.ok("Data inserted successfully");
-    }
 
+
+    @CrossOrigin("*")
+    @PostMapping("/saveSchedulId")
+    public ResponseEntity<ApiResponse<String>> saveScheduleID(@RequestParam String scheduleID) {
+        try {
+            // Assuming that your dataService.saveScheduleID may throw exceptions
+            String result=dataService.saveScheduleID(scheduleID);
+            ApiResponse<String> response = new ApiResponse<>(true, result, null);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            ApiResponse<String> response = new ApiResponse<>(false, null, e.getMessage());
+            return ResponseEntity.status(500).body(response);
+        }
+    }                                                                      
+     @CrossOrigin("*")
      @GetMapping("/getAllScheduleId")
-    public List<String> getAllScheduleIDs() {
+    public List<Map<String, String>> getAllScheduleIDs() {
         return dataService.getAllScheduleIDs();
     }
 
+
+    @PostMapping("/findMatchingTable")
+    public ResponseEntity<?> findMatchingTable(@RequestBody List<Map<String, Object>> jsonObjectList) {
+        try {
+            List<String> tableName = dataService.findMatchingTables(jsonObjectList);
+            if (tableName != null) {
+                return ResponseEntity.ok("Matching table found: " + tableName);
+            } else {
+                return ResponseEntity.ok("No matching table found.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error finding matching table: " + e.getMessage());
+        }
     }
+}

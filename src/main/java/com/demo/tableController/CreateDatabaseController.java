@@ -1,6 +1,7 @@
 package com.demo.tableController;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +21,19 @@ public class CreateDatabaseController {
     private CreateDatabaseService createDatabaseService;
 
     @PostMapping("/savedatabase")
-    public String createDatabase(@RequestBody CreateDatabaseDto databaseDTO) {
-        return createDatabaseService.createDatabase(databaseDTO.getDbName());
+    public ResponseEntity<ApiResponse<String>> createDatabase(@RequestBody CreateDatabaseDto databaseDTO) {
+        try {
+           String result = createDatabaseService.createDatabase(databaseDTO.getDbName());
+           ApiResponse<String> response = new ApiResponse<>(true, result, null);
+           return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            ApiResponse<String> response = new ApiResponse<>(false, null, "Error creating database: " + e.getMessage());
+            return ResponseEntity.status(500).body(response);
+        }
+        
     }
+
+
+
+     
 }
