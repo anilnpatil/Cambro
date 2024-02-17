@@ -11,7 +11,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.demo.config.DatabaseConfig;
+
 import com.demo.tableDto.DynamicTableDto;
 import com.demo.tableService.DynamicTableService;
 
@@ -40,8 +40,7 @@ public class DynamicTableController {
     // Delete Database feature
     @DeleteMapping("/dropDatabase/{dbName}")
     public ResponseEntity<ApiResponse<String>> dropDatabase(@PathVariable String dbName) {
-        DatabaseConfig database = new DatabaseConfig();
-        database.setDatabaseName(dbName);
+        
         try {
             String result = dynamicTableService.dropDatabase(dbName);
             ApiResponse<String> response = new ApiResponse<>(true, result, null);
@@ -55,9 +54,7 @@ public class DynamicTableController {
     //delete table feature
     @DeleteMapping("/dropTable/dbName={dbName}/tableName={tableName}")
     public ResponseEntity<ApiResponse<String>> dropTable(@PathVariable String dbName, @PathVariable String tableName) {
-        DatabaseConfig database = new DatabaseConfig();
-        database.setDatabaseName(dbName);
-        try {
+                try {
             String result = dynamicTableService.dropTable(dbName, tableName);
             ApiResponse<String> response = new ApiResponse<>(true, result, null);
             return ResponseEntity.ok(response);

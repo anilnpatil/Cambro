@@ -3,7 +3,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import com.demo.config.DatabaseConfig;
 
 import java.util.Collections;
 import java.util.List;
@@ -17,8 +16,7 @@ public class ShowTableService {
     private JdbcTemplate jdbcTemplate;
 
     public List<Map<String, String>> getAllTables(String databaseName) {
-        DatabaseConfig database = new DatabaseConfig();
-        database.setDatabaseName(databaseName);
+        
         try {
             // Use the database
             jdbcTemplate.execute("USE `" + databaseName + "`;");

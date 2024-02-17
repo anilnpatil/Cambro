@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import com.demo.config.DatabaseConfig;
+
 import com.demo.tableDto.Column;
 import com.demo.tableDto.DynamicTableDto;
 
@@ -125,8 +125,7 @@ public class DynamicTableService {
     }
 	//read the column name from the database table
 	public List<Map<String, String>> getTableColumns(String dbName, String tableName) throws DataAccessException {
-        DatabaseConfig database = new DatabaseConfig();
-        database.setDatabaseName(dbName);
+       
         try {
             String sql = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? ORDER BY ORDINAL_POSITION";
             return jdbcTemplate.query(sql, new Object[]{dbName, tableName}, (rs, rowNum) -> {

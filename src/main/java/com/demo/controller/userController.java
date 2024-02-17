@@ -1,7 +1,6 @@
 package com.demo.controller;
 
 
-import com.demo.config.DatabaseConfig;
 import com.demo.model.Role;
 import com.demo.model.User;
 import com.demo.model.userRole;
@@ -27,9 +26,7 @@ public class userController {
     private com.demo.repository.userRepository userRepository;
     @PostMapping("/")
     public User createUser(@RequestBody User user) throws Exception {
-        DatabaseConfig database = new DatabaseConfig();
-        database.setDatabaseName("boxes");
-
+       
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
         Role role = new Role();
@@ -46,8 +43,7 @@ public class userController {
     public User getUser(@PathVariable("userName") String uname)
     
     {
-        DatabaseConfig database = new DatabaseConfig();
-        database.setDatabaseName("boxes");
+        
         System.out.println(uname);
 
         return this.userService.getUser(uname);
@@ -56,9 +52,7 @@ public class userController {
     @DeleteMapping("/{userId}")
     public void deleteUser(@PathVariable("userId") Long uid)
     {
-        DatabaseConfig database = new DatabaseConfig();
-        database.setDatabaseName("boxes");
-        System.out.println(uid);
+                System.out.println(uid);
         this.userService.deleteUser(uid);
     }
 

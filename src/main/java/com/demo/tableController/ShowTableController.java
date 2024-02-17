@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.demo.config.DatabaseConfig;
+
 import com.demo.tableService.ShowTableService;
 
 import java.util.List;
@@ -21,8 +21,7 @@ public class ShowTableController {
 
     @GetMapping("/database/{dbName}")
     public List<Map<String, String>> getAllTables(@PathVariable("dbName") String databaseName) {
-        DatabaseConfig database = new DatabaseConfig();
-        database.setDatabaseName(databaseName);
+       
         return tableService.getAllTables(databaseName);
     }
 }

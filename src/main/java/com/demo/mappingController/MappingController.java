@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.demo.config.DatabaseConfig;
+
 import com.demo.mappingService.MappingService;
 import com.demo.tableController.ApiResponse;
 import com.demo.util.ApiResponse1;
@@ -52,8 +52,7 @@ public class MappingController {
                                                   @RequestParam String tableName,
                                                   @RequestBody List<Map<String, Object>> data) {
 
-        DatabaseConfig database = new DatabaseConfig();
-        database.setDatabaseName(dbName);                                      
+                                           
         try {
             for (Map<String, Object> data2 : data) {
                 dataService.insertData(dbName, tableName, data2);
@@ -70,6 +69,7 @@ public class MappingController {
     @CrossOrigin("*")
     @PostMapping("/saveSchedulId")
     public ResponseEntity<ApiResponse<String>> saveScheduleID(@RequestParam String scheduleID) {
+       
         try {
             // Assuming that your dataService.saveScheduleID may throw exceptions
             String result=dataService.saveScheduleID(scheduleID);
@@ -83,6 +83,7 @@ public class MappingController {
      @CrossOrigin("*")
      @GetMapping("/getAllScheduleId")
     public List<Map<String, String>> getAllScheduleIDs() {
+       
         return dataService.getAllScheduleIDs();
     }
 
