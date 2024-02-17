@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.demo.config.DatabaseConfig;
 import com.demo.mappingService.MappingService;
 import com.demo.tableController.ApiResponse;
 import com.demo.util.ApiResponse1;
@@ -49,6 +51,9 @@ public class MappingController {
     public ResponseEntity<ApiResponse1> insertData(@RequestParam String dbName,
                                                   @RequestParam String tableName,
                                                   @RequestBody List<Map<String, Object>> data) {
+
+        DatabaseConfig database = new DatabaseConfig();
+        database.setDatabaseName(dbName);                                      
         try {
             for (Map<String, Object> data2 : data) {
                 dataService.insertData(dbName, tableName, data2);
@@ -82,17 +87,5 @@ public class MappingController {
     }
 
 
-    @PostMapping("/findMatchingTable")
-    public ResponseEntity<?> findMatchingTable(@RequestBody List<Map<String, Object>> jsonObjectList) {
-        try {
-            List<String> tableName = dataService.findMatchingTables(jsonObjectList);
-            if (tableName != null) {
-                return ResponseEntity.ok("Matching table found: " + tableName);
-            } else {
-                return ResponseEntity.ok("No matching table found.");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error finding matching table: " + e.getMessage());
-        }
-    }
+    
 }

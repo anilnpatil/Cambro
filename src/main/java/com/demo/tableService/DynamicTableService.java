@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import com.demo.config.DatabaseConfig;
 import com.demo.tableDto.Column;
 import com.demo.tableDto.DynamicTableDto;
 
@@ -124,12 +125,19 @@ public class DynamicTableService {
     }
 	//read the column name from the database table
 	public List<Map<String, String>> getTableColumns(String dbName, String tableName) throws DataAccessException {
-        String sql = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? ORDER BY ORDINAL_POSITION";
-        return jdbcTemplate.query(sql, new Object[]{dbName, tableName}, (rs, rowNum) -> {
-            Map<String, String> columnMap = new HashMap<>();
-            columnMap.put("columnName", rs.getString("COLUMN_NAME"));
-            return columnMap;
-        });
+        DatabaseConfig database = new DatabaseConfig();
+        database.setDatabaseName(dbName);
+        try {
+            String sql = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? ORDER BY ORDINAL_POSITION";
+            return jdbcTemplate.query(sql, new Object[]{dbName, tableName}, (rs, rowNum) -> {
+                Map<String, String> columnMap = new HashMap<>();
+                columnMap.put("columnName", rs.getString("COLUMN_NAME"));
+                return columnMap;
+            });
+        } catch (DataAccessException e) {
+            // Log or handle the exception appropriately
+            throw e; // rethrowing the exception as it's better to propagate it in this context
+        }
     }
 }
 

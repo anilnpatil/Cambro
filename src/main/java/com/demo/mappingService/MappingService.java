@@ -64,7 +64,7 @@ public class MappingService {
 
     public String saveScheduleID(String scheduleID) {
         try {
-        String tableName = "scheduledb.scheduleid";
+        String tableName = "boxes.scheduleid";
         String sql = String.format("INSERT INTO %s (scheduleID) VALUES (?)", tableName);
 
         // Execute the query using JdbcTemplate
@@ -80,41 +80,12 @@ public class MappingService {
 
     public List<Map<String, String>> getAllScheduleIDs() {
         //String tableName = "scheduledb.scheduleid";
-        String sql = "SELECT scheduleID FROM scheduledb.scheduleid";
+        String sql = "SELECT scheduleID FROM boxes.scheduleid";
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Map<String, String> scheduleId = new HashMap<>();
             scheduleId.put("name", rs.getString(1));
             return scheduleId;
         });
-    }
-
-    public List<String> findMatchingTables(List<Map<String, Object>> jsonObjectList) {
-        List<String> matchingTables = new ArrayList<>();
-        try {
-            java.sql.DatabaseMetaData metaData = jdbcTemplate.getDataSource().getConnection().getMetaData();
-            ResultSet tables = metaData.getTables(null, null, null, new String[] { "TABLE" });
-
-            while (tables.next()) {
-                String tableName = tables.getString("TABLE_NAME");
-                ResultSet columns = metaData.getColumns(null, null, tableName, null);
-
-                if (hasMatchingColumns(columns, jsonObjectList.get(0).keySet())) {
-                    matchingTables.add(tableName);
-                }
-            }
-        } catch (SQLException e) {
-            // Handle exception
-            e.printStackTrace();
-        }
-        return matchingTables;
-    }
-
-    private boolean hasMatchingColumns(ResultSet columns, Set<String> jsonKeys) throws SQLException {
-        Set<String> columnNames = new HashSet<>();
-        while (columns.next()) {
-            columnNames.add(columns.getString("COLUMN_NAME"));
-        }
-        return columnNames.equals(jsonKeys);
     }
 }
 

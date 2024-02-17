@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.demo.config.DatabaseConfig;
 import com.demo.tableService.OpenTableService;
 
 import java.util.List;
@@ -20,6 +21,8 @@ public class OpenTableController {
 
     @GetMapping("/{dbName}/table-data/{tableName}")
     public List<Map<String, Object>> getTableData(@PathVariable String dbName, @PathVariable String tableName) {
+        DatabaseConfig databse=new DatabaseConfig();
+        databse.setDatabaseName(dbName);
         return tableDataService.getTableData(dbName, tableName);
     }
 }

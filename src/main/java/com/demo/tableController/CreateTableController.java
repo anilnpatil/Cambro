@@ -1,5 +1,6 @@
 package com.demo.tableController;
 
+import com.demo.config.DatabaseConfig;
 import com.demo.tableDto.CreateTableDto;
 import com.demo.tableService.CreateTableService;
 
@@ -21,6 +22,9 @@ public class CreateTableController {
     @PostMapping("/create")
     public ResponseEntity<ApiResponse<String>> createTable(@PathVariable("dbName") String dbName,
                                                           @RequestBody CreateTableDto tableRequest) {
+
+        DatabaseConfig database = new DatabaseConfig();
+        database.setDatabaseName(dbName);                                             
         try {
             String result = createTableService.createTable(dbName, tableRequest);
             ApiResponse<String> response = new ApiResponse<>(true, result, null);
