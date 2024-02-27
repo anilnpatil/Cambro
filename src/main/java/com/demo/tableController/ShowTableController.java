@@ -1,13 +1,11 @@
 package com.demo.tableController;
+import com.demo.tableService.ShowTableService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-
-import com.demo.tableService.ShowTableService;
 
 import java.util.List;
 import java.util.Map;
@@ -21,7 +19,7 @@ public class ShowTableController {
 
     @GetMapping("/database/{dbName}")
     public List<Map<String, String>> getAllTables(@PathVariable("dbName") String databaseName) {
-       
+    
         return tableService.getAllTables(databaseName);
     }
 }

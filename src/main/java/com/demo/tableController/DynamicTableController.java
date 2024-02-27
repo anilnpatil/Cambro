@@ -1,18 +1,13 @@
 package com.demo.tableController;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-import com.demo.tableDto.DynamicTableDto;
 import com.demo.tableService.DynamicTableService;
 
 @RestController
@@ -23,20 +18,7 @@ public class DynamicTableController {
 
     @Autowired
     private DynamicTableService dynamicTableService;
-//Create table feature    
-    @PostMapping("/createTable")
-    public ResponseEntity<String> createTable(@RequestBody DynamicTableDto tableRequest) {
-        logger.info("Request received to create table: {}", tableRequest.getTableName());
-        try {
-            String result = dynamicTableService.createTable(tableRequest);
-            logger.info("Table created successfully: {}", tableRequest.getTableName());
-            return ResponseEntity.ok(result);
-        } catch (Exception e) {
-            logger.error("Error creating table: {}", e.getMessage(), e);
-            return ResponseEntity.status(500).body("Error creating table: " + e.getMessage());
-        }
-    }
-
+    
     // Delete Database feature
     @DeleteMapping("/dropDatabase/{dbName}")
     public ResponseEntity<ApiResponse<String>> dropDatabase(@PathVariable String dbName) {
@@ -65,5 +47,6 @@ public class DynamicTableController {
         }
     }  
 }
+
 
 
