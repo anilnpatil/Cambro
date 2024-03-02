@@ -1,4 +1,4 @@
-package com.demo.tableController;
+package com.demo.util;
 
 public class ApiResponse<T> {
     private boolean success;

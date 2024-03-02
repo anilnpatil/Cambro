@@ -2,6 +2,7 @@ package com.demo.tableController;
 
 import com.demo.tableDto.CreateTableDto;
 import com.demo.tableService.CreateTableService;
+import com.demo.util.ApiResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

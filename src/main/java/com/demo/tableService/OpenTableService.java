@@ -16,7 +16,24 @@ public class OpenTableService {
         // You should validate dbName and tableName to prevent SQL Injection
         // For example, check against a list of allowed database and table names
 
+        // Get table metadata (columns)
+        List<Map<String, Object>> columns = getTableColumns(dbName, tableName);
+
+        // Fetch table data
         String sql = "SELECT * FROM " + dbName + "." + tableName + ";";
-        return jdbcTemplate.queryForList(sql);
+        List<Map<String, Object>> tableData = jdbcTemplate.queryForList(sql);
+
+        // If no data exists, construct a result with only column names
+        if (tableData.isEmpty()) {
+            return columns;
+        } else {
+            return tableData;
+        }
+    }
+
+    private List<Map<String, Object>> getTableColumns(String dbName, String tableName) {
+        String sql = "SELECT * FROM information_schema.columns " +
+                     "WHERE table_schema = ? AND table_name = ?";
+        return jdbcTemplate.queryForList(sql, dbName, tableName);
     }
 }

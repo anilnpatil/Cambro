@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.time.LocalDateTime;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-
+import java.util.*;
 @RestController
 @RequestMapping("/api")
 @CrossOrigin("*")
@@ -78,6 +80,16 @@ public class IdentifyController {
 // this code will find the all the matching tables from the single database
 @PostMapping("/identify")
 public ResponseEntity<Object> identifyTableAndDatabase(@RequestBody Map<String, String> jsonInput) {
+    // Check if jsonInput is null or empty
+    if (jsonInput == null || jsonInput.isEmpty()) {
+        return ResponseEntity.badRequest().body("JSON input is null or empty");
+    }
+     // Add starttime, endtime, and date to the JSON input
+    jsonInput.put("startTime", "2024-02-29 14:56:11");
+    jsonInput.put("endTime", null); // Assuming endtime is initially null
+    jsonInput.put("date", "2024-02-29 14:56:11");
+System.out.println(jsonInput.toString());
+
     try {
         String targetDatabaseName = "boxes"; // Change this to your target database name
         List<Map<String, String>> tables = this.tableService.getAllTables(targetDatabaseName);
@@ -91,7 +103,7 @@ public ResponseEntity<Object> identifyTableAndDatabase(@RequestBody Map<String, 
             Set<String> columnNames = columns.stream().map(column -> column.get("columnName")).collect(Collectors.toSet());
             tableColumns.put(tableName, columnNames);
             tableDatabase.put(tableName, targetDatabaseName);
-        });
+        });   
 
         Set<String> jsonColumnNames = jsonInput.keySet();
         List<Map<String, String>> matchingTables = new ArrayList<>();

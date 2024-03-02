@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.demo.mappingService.MappingService;
-import com.demo.tableController.ApiResponse;
+import com.demo.util.ApiRespons;
+import com.demo.util.ApiResponse;
 import com.demo.util.ApiResponse1;
 
 @RestController
@@ -24,18 +26,22 @@ public class MappingController {
 
     @Autowired
     private MappingService mappingService;
-    
-    // to insert json object data into the specified db and table
+    private static final Logger logger = LoggerFactory.getLogger(MappingController.class);
+
+
     @CrossOrigin("*")
     @PostMapping("/insertData")
     public ResponseEntity<ApiResponse1> insertData(@RequestParam String dbName,
                                                    @RequestParam String tableName,
                                                    @RequestBody List<Map<String, Object>> data) {
         try {
-            for (Map<String, Object> data2 : data) {
-                mappingService.insertData(dbName, tableName, data2);
+            if (data != null && !data.isEmpty()) {
+                List<Map<String, Object>> insertedData = mappingService.insertData(dbName, tableName, data);
+                return ResponseEntity.ok(ApiResponse1.success("Data inserted successfully", insertedData));
+            } else {
+                System.out.println("No data available to process.");
+                return ResponseEntity.ok(ApiResponse1.success("No data available to process", null));
             }
-            return ResponseEntity.ok(ApiResponse1.success("Data inserted successfully", null));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(ApiResponse1.error(e.getMessage()));
         } catch (SQLException e) {
@@ -44,7 +50,20 @@ public class MappingController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse1.error("Internal server error table not matched"));
         }
     }
-
+    @CrossOrigin("*")
+    @PostMapping("/updateEndTime")
+    public ResponseEntity<ApiRespons> updateEndTime(@RequestParam String dbName, @RequestParam String tableName, @RequestParam String scheduleID) {
+        try {
+            String result = mappingService.updateEndTime(dbName, tableName, scheduleID);
+            ApiRespons response = new ApiRespons(result, null);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            logger.error("Failed to update end time", e);
+            ApiRespons response = new ApiRespons(null, "Failed to update end time");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+    
     //to save the schedule id
     @CrossOrigin("*")
     @PostMapping("/saveSchedulId")
