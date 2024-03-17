@@ -19,7 +19,13 @@ public class MappingService {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    public MappingService(JdbcTemplate jdbcTemplate){
+    this.jdbcTemplate = jdbcTemplate;
+     }
     public List<Map<String, Object>> insertData(String dbName, String tableName, List<Map<String, Object>> dataList) throws SQLException {
+         MappingService mapingService = new MappingService(jdbcTemplate);
+         mapingService.saveJsonKeyVariables1(dataList);
+       
         List<Map<String, Object>> insertedDataList = new ArrayList<>();
         try {
             for (Map<String, Object> data : dataList) {
@@ -82,6 +88,58 @@ public class MappingService {
         }
     }
      
+    public List<String> saveJsonKeyVariables1(List<Map<String, Object>> dataList) throws SQLException {
+        String dbName = "boxes";
+        String tableName = "variableandplctag";
+        String keyColumnName = "jsonVariable";
+        List<String> insertedKeys = new ArrayList<>();
+        try {
+            // Check if the table is empty
+            String countSql = String.format("SELECT COUNT(*) FROM %s.%s", dbName, tableName);
+            int rowCount = jdbcTemplate.queryForObject(countSql, Integer.class);
+    
+            if (rowCount == 0) {
+                // Table is empty, insert keys directly
+                for (Map<String, Object> data : dataList) {
+                    for (String key : data.keySet()) {
+                        String insertSql = String.format("INSERT INTO %s.%s (%s) VALUES (?)", dbName, tableName, keyColumnName);
+                        jdbcTemplate.update(insertSql, key);
+                        insertedKeys.add(key);
+                        logger.info("Key '{}' inserted successfully into table '{}'", key, tableName);
+                    }
+                }
+            } else {
+                // Table has data, proceed with checking and inserting keys
+                for (Map<String, Object> data : dataList) {
+                    // Extract keys from the map
+                    Set<String> keys = data.keySet();
+    
+                    for (String key : keys) {
+                        // Check if the key exists in the database
+                        String selectSql = String.format("SELECT COUNT(*) FROM %s.%s WHERE %s = ?", dbName, tableName, keyColumnName);
+                        int count = jdbcTemplate.queryForObject(selectSql, Integer.class, key);
+                        
+                        if (count == 0) {
+                            // Key does not exist in the database, insert it
+                            String insertSql = String.format("INSERT INTO %s.%s (%s) VALUES (?)", dbName, tableName, keyColumnName);
+                            jdbcTemplate.update(insertSql, key);
+                            insertedKeys.add(key);
+                            logger.info("Key '{}' inserted successfully into table '{}'", key, tableName);
+                        }
+                    }
+                }
+            }
+            return insertedKeys;
+        } catch (SQLGrammarException e) {
+            logger.error("SQL Error occurred while inserting keys into table '{}': {}", tableName, e.getMessage(), e);
+            throw e; // Propagate the exception back to the controller
+        } catch (Exception e) {
+            logger.error("Error occurred while inserting keys into table '{}': {}", tableName, e.getMessage(), e);
+            throw e; // Propagate the exception back to the controller
+        }
+    }
+    
+    
     
     // scheduleId Save feature
     public String saveScheduleID(String scheduleID) {
