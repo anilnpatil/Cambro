@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+
+import com.demo.service.UserEventService;
+
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -16,6 +19,8 @@ import javax.transaction.Transactional;
 @Service
 public class MappingService {
     private static final Logger logger = LoggerFactory.getLogger(MappingService.class);
+    @Autowired
+    UserEventService userEventService;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -144,13 +149,14 @@ public class MappingService {
     // scheduleId Save feature
     public String saveScheduleID(String scheduleID) {
         try {
-        String tableName = "boxes.scheduleid";
-        String sql = String.format("INSERT INTO %s (scheduleID) VALUES (?)", tableName);
+        userEventService.updateWithScheduleId(scheduleID);
+        // String tableName = "boxes.scheduleid";
+        // String sql = String.format("INSERT INTO %s (scheduleID) VALUES (?)", tableName);
 
-        // Execute the query using JdbcTemplate
-        jdbcTemplate.update(sql, scheduleID);
-        logger.info("Updated scheduleId {} Saved Successfully {}", scheduleID);
-        return "scheduleId Saved Successfully";
+        // // Execute the query using JdbcTemplate
+        // jdbcTemplate.update(sql, scheduleID);
+        // logger.info("Updated scheduleId {} Saved Successfully {}", scheduleID);
+           return "scheduleId Saved Successfully";
     } catch (DataAccessException e) {
         logger.error("Error in saving scheduleId {} in database {}: {}", e.getMessage(), e);
         return "Error in Saving the dat: " + e.getMessage();

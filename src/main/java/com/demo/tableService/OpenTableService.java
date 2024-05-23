@@ -36,4 +36,25 @@ public class OpenTableService {
                      "WHERE table_schema = ? AND table_name = ?";
         return jdbcTemplate.queryForList(sql, dbName, tableName);
     }
+
+   
+    public List<Map<String, Object>> getLatestTableData() {
+        // You should validate dbName and tableName to prevent SQL Injection
+        // For example, check against a list of allowed database and table names
+    
+        // Get table metadata (columns)
+        List<Map<String, Object>> columns = getTableColumns("boxes", "simuka");
+    
+        // Fetch latest table data
+        String sql = "SELECT * FROM " + "boxes" + "." + "simuka" + " ORDER BY startTime DESC LIMIT 1;";
+        List<Map<String, Object>> latestData = jdbcTemplate.queryForList(sql);
+    
+        // If no data exists, construct a result with only column names
+        if (latestData.isEmpty()) {
+            // Construct result with only column names
+            return columns;
+        } else {
+            return latestData;
+        }
+    }
 }

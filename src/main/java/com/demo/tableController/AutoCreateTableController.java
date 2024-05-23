@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +23,7 @@ public class AutoCreateTableController {
     private AutoCreateTableService autotableService;
 
     @PostMapping("/mapping/createTable")
+    @CrossOrigin("*")
     public ResponseEntity<Map<String, String>> createTable(@RequestParam("dbName") String dbName,
                                                            @RequestParam("tableName") String tableName,
                                                            @RequestBody String jsonString) {

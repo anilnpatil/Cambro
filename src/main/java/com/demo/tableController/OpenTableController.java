@@ -23,4 +23,10 @@ public class OpenTableController {
     public List<Map<String, Object>> getTableData(@PathVariable String dbName, @PathVariable String tableName) {
         return tableDataService.getTableData(dbName, tableName);
     }
+
+
+    @GetMapping("/latest-table-data")
+    public List<Map<String, Object>> getLatestTableData() {
+        return tableDataService.getLatestTableData();
+    }
 }

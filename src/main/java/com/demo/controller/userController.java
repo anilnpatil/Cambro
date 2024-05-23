@@ -23,7 +23,6 @@ public class userController {
     @Autowired
     private UserService userService;
 
-    private com.demo.repository.userRepository userRepository;
     @PostMapping("/")
     public User createUser(@RequestBody User user) throws Exception {
        
